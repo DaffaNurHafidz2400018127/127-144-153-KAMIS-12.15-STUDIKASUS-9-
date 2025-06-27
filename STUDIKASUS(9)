@@ -1,0 +1,120 @@
+#include <iostream>
+#include <iomanip>
+#include <conio.h>
+using namespace std;
+
+const int MAX_SISWA = 100;
+
+class DataNilaiSiswa {
+private:
+    string nim[MAX_SISWA];
+    float nilai[MAX_SISWA][3];
+    float rataRata[MAX_SISWA];
+    int jumlahSiswa;
+
+public:
+    DataNilaiSiswa() {
+        jumlahSiswa = 0;
+    }
+
+    void inputData() {
+        cout << "Masukkan jumlah mahasiswa : ";
+        cin >> jumlahSiswa;
+        cout << "Masukkan nilai untuk " << jumlahSiswa << " siswa (3 mata pelajaran):\n";
+        for (int i = 0; i < jumlahSiswa; i++) {
+            cout << "Siswa " << i + 1 << ":\n";
+            cout << "  Nim " << i + 1 << ": ";
+            cin >> nim[i];
+            for (int j = 0; j < 3; j++) {
+                cout << "  Nilai mapel " << j + 1 << ": ";
+                cin >> nilai[i][j];
+            }
+            rataRata[i] = (nilai[i][0] + nilai[i][1] + nilai[i][2]) / 3.0f;
+        }
+    }
+
+    void tampilkanTabel() {
+        cout << "+-------------------------------------------------+\n";
+        cout << "| Siswa |  Nim  |   M1  |  M2   |   M3   |  Rata  |\n";
+        cout << "+-------------------------------------------------+\n";
+        for (int i = 0; i < jumlahSiswa; i++) {
+            cout << "| " << setw(5) << i + 1
+                 << " | " << setw(5) << nim[i]
+                 << " | " << setw(5) << (int)nilai[i][0]
+                 << " | " << setw(5) << (int)nilai[i][1]
+                 << " | " << setw(5) << (int)nilai[i][2]
+                 << " | " << fixed << setprecision(4) << rataRata[i] << " |\n";
+        }
+        cout << "+-------------------------------------------------+\n";
+    }
+
+    void sorting(bool ascending = true) {
+        for (int i = 0; i < jumlahSiswa - 1; i++) {
+            for (int j = 0; j < jumlahSiswa - i - 1; j++) {
+                if ((ascending && rataRata[j] > rataRata[j + 1]) ||
+                    (!ascending && rataRata[j] < rataRata[j + 1])) {
+                    swap(rataRata[j], rataRata[j + 1]);
+                    swap(nim[j], nim[j + 1]);
+                    for (int k = 0; k < 3; k++) {
+                        swap(nilai[j][k], nilai[j + 1][k]);
+                    }
+                }
+            }
+        }
+
+        if (ascending)
+            cout << "Rata-rata siswa (Ascending): ";
+        else
+            cout << "Rata-rata siswa (Descending): ";
+
+        for (int i = 0; i < jumlahSiswa; i++) {
+            cout << fixed << setprecision(4) << rataRata[i] << " | ";
+        }
+        cout << endl;
+    }
+};
+
+int main() {
+    DataNilaiSiswa d;
+    char pilihan;
+
+    do {
+        cout << "===== MENU =====\n";
+        cout << "1. Input Nilai Siswa\n";
+        cout << "2. Tampilkan Tabel Nilai dan Rata-rata\n";
+        cout << "3. Sorting Rata-rata (Ascending)\n";
+        cout << "4. Sorting Rata-rata (Descending)\n";
+        cout << "5. Keluar\n";
+        cout << "Pilih menu: ";
+        cin >> pilihan;
+        cout << "\n";
+
+        switch (pilihan) {
+            case '1':
+                d.inputData();
+                break;
+            case '2':
+                d.tampilkanTabel();
+                break;
+            case '3':
+                d.sorting(true);
+                break;
+            case '4':
+                d.sorting(false);
+                break;
+            case '5':
+                cout << "Program selesai.\n";
+                break;
+            default:
+                cout << "Pilihan tidak valid!\n";
+                break;
+        }
+
+        if (pilihan != '5') {
+            cout << "\n";
+        }
+
+    } while (pilihan != '5');
+
+    return 0;
+}
